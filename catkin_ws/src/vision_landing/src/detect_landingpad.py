@@ -15,6 +15,23 @@ class image_converter:
     self.bridge = CvBridge()
     self.image_sub = rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
 
+    #create blob detector parameter object
+    self.params = cv2.SimpleBlobDetector_Params()
+    #filter by size
+    self.params.filterByArea = True
+    self.params.minArea = 100
+    #filter by circularity
+    self.params.filterByCircularity = True
+    self.params.minCircularity = 0.5
+    #filter by convexity
+    self.params.filterByConvexity = True
+    self.params.minConvexity = 0.87
+    #filter by inertia
+    self.params.filterByInertia = True
+    self.params.minInertiaRatio = 0.35
+    #create blob detector with params object
+    self.blob_detect = cv2.SimpleBlobDetector(self.params)
+
   def callback(self,data):
     try:
       cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -37,13 +54,13 @@ class image_converter:
       print(e)
 
 def main(args):
-  ic = image_converter()
-  rospy.init_node('image_converter', anonymous=True)
-  try:
-    rospy.spin()
-  except KeyboardInterrupt:
-    print("Shutting down")
-  cv2.destroyAllWindows()
+    rospy.init_node('image_converter', anonymous=True)
+    ic = image_converter()
+    try:
+        rospy.spin()
+    except KeyboardInterrupt:
+        print("Shutting down")
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     main(sys.argv)
