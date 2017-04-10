@@ -7,11 +7,13 @@ import numpy as np
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
+from geometry_msgs.msg import Vector3
 
 class image_converter:
 
   def __init__(self):
     self.image_pub = rospy.Publisher("image_topic_2",Image)
+    self.pixel_pub = rospy.Publisher("pixel_coordinates",Vector3)
 
     self.bridge = CvBridge()
     self.image_sub = rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
@@ -58,6 +60,8 @@ class image_converter:
     #detect blobs and get keypoints
     keypoints = self.blob_detect.detect(gray_thresh)
 
+    pixel = Vector3()
+
     if len(keypoints) == 1:
         for p in keypoints:
             x_coord = p.pt[0]
@@ -66,6 +70,16 @@ class image_converter:
             #shift coordinates to be relative to center
             x_coord = x_coord - 320
             y_coord = y_coord - 240
+            pixel.x = x_coord
+            pixel.y = y_coord
+            pixel.z = 1
+    else:
+        pixel.x = 0
+        pixel.y = 0
+        pixel.z = 0
+
+    self.pixel_pub.publish(pixel)
+
 
 
     #draw keypoints
@@ -76,10 +90,13 @@ class image_converter:
     cv2.imshow("Image window", img_w_keypoints)
     cv2.waitKey(3)
 
+    #publish the image
     try:
       self.image_pub.publish(self.bridge.cv2_to_imgmsg(img_w_keypoints, "bgr8"))
     except CvBridgeError as e:
       print(e)
+
+
 
 def main(args):
     rospy.init_node('image_converter', anonymous=True)
