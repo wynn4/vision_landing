@@ -12,8 +12,8 @@ from geometry_msgs.msg import Vector3
 class image_converter:
 
   def __init__(self):
-    self.image_pub = rospy.Publisher("image_topic_2",Image)
-    self.pixel_pub = rospy.Publisher("pixel_coordinates",Vector3)
+    self.image_pub = rospy.Publisher("image_topic_2",Image, queue_size=1)
+    self.pixel_pub = rospy.Publisher("pixel_coordinates",Vector3,  queue_size=1)
 
     self.bridge = CvBridge()
     self.image_sub = rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
@@ -62,6 +62,7 @@ class image_converter:
 
     pixel = Vector3()
 
+    #if we found one valid target
     if len(keypoints) == 1:
         for p in keypoints:
             x_coord = p.pt[0]
@@ -78,6 +79,7 @@ class image_converter:
         pixel.y = 0
         pixel.z = 0
 
+    #publish the pixel location of the target
     self.pixel_pub.publish(pixel)
 
 
