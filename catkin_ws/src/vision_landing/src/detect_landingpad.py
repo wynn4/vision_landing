@@ -33,7 +33,8 @@ class image_converter:
     self.params.filterByInertia = True
     self.params.minInertiaRatio = 0.35
     #create blob detector with params object
-    self.blob_detect = cv2.SimpleBlobDetector(self.params)
+    self.blob_detect = cv2.SimpleBlobDetector_create(self.params)   #openCV3
+    #self.blob_detect = cv2.SimpleBlobDetector(self.params)  #openCV2
 
   def callback(self,data):
     try:
