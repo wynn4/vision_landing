@@ -61,6 +61,19 @@ while cap.isOpened():
     #detect blobs and get keypoints
     keypoints = blob_detect.detect(gray_thresh)
 
+    if len(keypoints) == 1:
+        #print 'tracking'
+        for p in keypoints:
+            x_coord = p.pt[0]
+            y_coord = p.pt[1]
+
+            #shift coordinates to be relative to center
+            x_coord = x_coord - 320
+            y_coord = y_coord - 240  #y-coordinate
+            print str(x_coord) + ', ' + str(y_coord)
+    else:
+        print 'not tracking'
+
     #draw keypoints
     img_w_keypoints = cv2.drawKeypoints(frame,keypoints,np.array([]),(0,0,255),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 

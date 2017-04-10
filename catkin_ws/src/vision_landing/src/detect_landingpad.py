@@ -58,12 +58,22 @@ class image_converter:
     #detect blobs and get keypoints
     keypoints = self.blob_detect.detect(gray_thresh)
 
+    if len(keypoints) == 1:
+        for p in keypoints:
+            x_coord = p.pt[0]
+            y_coord = p.pt[1]
+
+            #shift coordinates to be relative to center
+            x_coord = x_coord - 320
+            y_coord = y_coord - 240
+
+
     #draw keypoints
     img_w_keypoints = cv2.drawKeypoints(cv_image,keypoints,np.array([]),(0,0,255),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
     #__END PLAIN THRESHOLD METHOD__
 
-    cv2.imshow("Image window", cv_image)
+    cv2.imshow("Image window", gray_thresh)
     cv2.waitKey(3)
 
     try:
