@@ -73,11 +73,11 @@ class image_converter:
 
     #__END PLAIN THRESHOLD METHOD__
 
-    cv2.imshow("Image window", gray_thresh)
+    cv2.imshow("Image window", img_w_keypoints)
     cv2.waitKey(3)
 
     try:
-      self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
+      self.image_pub.publish(self.bridge.cv2_to_imgmsg(img_w_keypoints, "bgr8"))
     except CvBridgeError as e:
       print(e)
 
