@@ -3,6 +3,7 @@ import roslib
 import sys
 import rospy
 import cv2
+import numpy as np
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
@@ -41,9 +42,26 @@ class image_converter:
     ###############################################
     # Jesse,,,, put your image processing code here
 
-    (rows,cols,channels) = cv_image.shape
-    if cols > 60 and rows > 60 :
-      cv2.circle(cv_image, (50,50), 10, 255)
+    #(rows,cols,channels) = cv_image.shape
+    #if cols > 60 and rows > 60 :
+    #  cv2.circle(cv_image, (50,50), 10, 255)
+
+    #__BEGIN PLAIN THRESHOLD METHOD__
+    #convert to grayscale
+    gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
+    #threshold
+    _, gray_thresh = cv2.threshold(gray, 230, 255, 1)
+    #erode to kill the noise
+    #kernel = np.zeros((11,11),np.uint8)
+    #gray_erode = cv2.erode(gray_thresh,kernel,iterations = 1)
+
+    #detect blobs and get keypoints
+    keypoints = self.blob_detect.detect(gray_thresh)
+
+    #draw keypoints
+    img_w_keypoints = cv2.drawKeypoints(cv_image,keypoints,np.array([]),(0,0,255),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+    #__END PLAIN THRESHOLD METHOD__
 
     cv2.imshow("Image window", cv_image)
     cv2.waitKey(3)
