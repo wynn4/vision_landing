@@ -41,12 +41,7 @@ class image_converter:
     except CvBridgeError as e:
       print(e)
 
-    ###############################################
-    # Jesse,,,, put your image processing code here
-
-    #(rows,cols,channels) = cv_image.shape
-    #if cols > 60 and rows > 60 :
-    #  cv2.circle(cv_image, (50,50), 10, 255)
+    #__Process the image to find the target pixel location
 
     #__BEGIN PLAIN THRESHOLD METHOD__
     #convert to grayscale
@@ -56,13 +51,15 @@ class image_converter:
     #erode to kill the noise
     #kernel = np.zeros((11,11),np.uint8)
     #gray_erode = cv2.erode(gray_thresh,kernel,iterations = 1)
+    #__END PLAIN THRESHOLD METHOD__
 
     #detect blobs and get keypoints
     keypoints = self.blob_detect.detect(gray_thresh)
 
+    #create a Vector3 object
     pixel = Vector3()
 
-    #if we found one valid target
+    #Check to make sure there's only one blob found
     if len(keypoints) == 1:
         for p in keypoints:
             x_coord = p.pt[0]
@@ -82,15 +79,12 @@ class image_converter:
     #publish the pixel location of the target
     self.pixel_pub.publish(pixel)
 
-
-
     #draw keypoints
     img_w_keypoints = cv2.drawKeypoints(cv_image,keypoints,np.array([]),(0,0,255),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-    #__END PLAIN THRESHOLD METHOD__
-
-    cv2.imshow("Image window", img_w_keypoints)
-    cv2.waitKey(3)
+    #display the image
+    #cv2.imshow("Image window", img_w_keypoints)
+    #cv2.waitKey(3)
 
     #publish the image
     try:
