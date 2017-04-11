@@ -71,8 +71,8 @@ def listener():
 
     r = rospy.Rate(30) # 30 hz
 
-    connection_string = '127.0.0.1:14550'   #simulation
-    #connection_string = 'something'   #pixhawk
+    connection_string = '127.0.0.1:14551'   #simulation
+    # connection_string = '/dev/ttyUSB0'   #pixhawk
     #sitl = None
 
     print "\nConnecting to vehicle on: %s" % connection_string

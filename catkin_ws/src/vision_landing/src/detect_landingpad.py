@@ -36,6 +36,12 @@ class image_converter:
     self.blob_detect = cv2.SimpleBlobDetector_create(self.params)   #openCV3
     #self.blob_detect = cv2.SimpleBlobDetector(self.params)  #openCV2
 
+    #create videowriter object
+    fps = 15
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    self.out = cv2.VideoWriter()
+    success = self.out.open('/home/hummingbird1/Desktop/test_vid.avi',fourcc,fps,(640,480),True)
+
   def callback(self,data):
     try:
       cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -83,6 +89,9 @@ class image_converter:
     #draw keypoints
     img_w_keypoints = cv2.drawKeypoints(cv_image,keypoints,np.array([]),(0,0,255),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
+    #write the image to videowriter
+    self.out.write(img_w_keypoints)
+
     #display the image
     #cv2.imshow("Image window", img_w_keypoints)
     #cv2.waitKey(3)
@@ -103,6 +112,7 @@ def main(args):
     except KeyboardInterrupt:
         print("Shutting down")
     cv2.destroyAllWindows()
+    self.out.release()
 
 if __name__ == '__main__':
     main(sys.argv)
