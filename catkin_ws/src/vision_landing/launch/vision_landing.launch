@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find usb_cam)/launch/usb_cam-test.launch" />
+  <node pkg="vision_landing" name="detect_landingpad" type="detect_landingpad.py" output="screen"/>
+  <node pkg="vision_landing" name="relative_tracking_downward_cam" type="relative_tracking_downward_cam.py" output="screen"/>
+
+</launch>

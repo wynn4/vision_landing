@@ -12,7 +12,7 @@ from geometry_msgs.msg import Vector3
 class image_converter:
 
   def __init__(self):
-    self.image_pub = rospy.Publisher("image_topic_2",Image, queue_size=1)
+    self.image_pub = rospy.Publisher("image_with_blob",Image, queue_size=1)
     self.pixel_pub = rospy.Publisher("pixel_coordinates",Vector3,  queue_size=1)
 
     self.bridge = CvBridge()
