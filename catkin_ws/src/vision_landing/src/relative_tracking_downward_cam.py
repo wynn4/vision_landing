@@ -26,6 +26,10 @@ import numpy as np
 pixel_x = 0
 pixel_y = 0
 
+# horizontal and vertical field of view angle
+hfv = 1.0618436422826059
+vfv = 0.8648155511410757
+
 def pixel_callback(data):
     global pixel_x
     global pixel_y
@@ -48,9 +52,9 @@ def calculate_command(vehicle):
     theta = vehicle.attitude.pitch
 
     # angle between target and -z-axis of the rotor in roll axis
-    x_angle = phi-pixel_x*hov/1600.0
+    x_angle = phi-pixel_x*hov/640.0
     py = altitude*tan(x_angle)
-    y_angle = theta-pixel_y*vev/1200.0
+    y_angle = theta-pixel_y*vev/320.0
     px = -altitude*tan(y_angle)
 
     # print "px, py: ", px, py
