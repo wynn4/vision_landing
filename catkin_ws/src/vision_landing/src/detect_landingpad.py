@@ -40,7 +40,7 @@ class image_converter:
     fps = 15
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     self.out = cv2.VideoWriter()
-    success = self.out.open('/home/hummingbird1/Desktop/test_vid.avi',fourcc,fps,(640,480),True)
+    success = self.out.open('/home/hummingbird1/Desktop/test_vid2.avi',fourcc,fps,(640,480),True)
 
   def callback(self,data):
     try:

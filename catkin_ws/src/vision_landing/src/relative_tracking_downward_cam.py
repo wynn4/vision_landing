@@ -79,6 +79,7 @@ def listener():
     vehicle = connect(connection_string, wait_ready=True)
 
     arm_and_takeoff(10, vehicle)
+    vehicle.airspeed = 1
 
     while not rospy.is_shutdown():
         (vx, vy, descend) = calculate_command(vehicle)
