@@ -71,14 +71,16 @@ def listener():
 
     r = rospy.Rate(30) # 30 hz
 
-    connection_string = '127.0.0.1:14551'   #simulation
-    # connection_string = '/dev/ttyUSB0'   #pixhawk
-    #sitl = None
+    connection_string = '127.0.0.1:14550'   #simulation
+    #connection_string = '127.0.0.1:14551'   #MAVProxy / Pixhawk
+
 
     print "\nConnecting to vehicle on: %s" % connection_string
     vehicle = connect(connection_string, wait_ready=True)
 
     arm_and_takeoff(10, vehicle)
+
+    #set target airspeed to 1 m/s
     vehicle.airspeed = 1
 
     while not rospy.is_shutdown():
@@ -88,7 +90,6 @@ def listener():
         else:
             goto_position_target_local_ned(vx, vy, 0, vehicle)
 
-        # point1 = LocationGlobalRelative
         r.sleep()
 
 def arm_and_takeoff(aTargetAltitude, vehicle):
@@ -126,12 +127,13 @@ def arm_and_takeoff(aTargetAltitude, vehicle):
             break
         time.sleep(1)
 
+#function that generates and sends mavlink message for copter to move to a BODYFIXED relatie NED position
 def goto_position_target_local_ned(north, east, down, vehicle):
 
     msg = vehicle.message_factory.set_position_target_local_ned_encode(
         0,       # time_boot_ms (not used)
         0, 0,    # target system, target component
-        mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED, # frame MAV_FRAME_BODY_OFFSET_NED MAV_FRAME_LOCAL_NED MAV_FRAME_LOCAL_OFFSET_NED
+        mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED, # possible flags: MAV_FRAME_BODY_OFFSET_NED, MAV_FRAME_LOCAL_NED, MAV_FRAME_LOCAL_OFFSET_NED
         0b0000111111111000, # type_mask (only positions enabled)
         north, east, down, # x, y, z positions (or North, East, Down in the MAV_FRAME_BODY_NED frame
         0, 0, 0, # x, y, z velocity in m/s  (not used)
